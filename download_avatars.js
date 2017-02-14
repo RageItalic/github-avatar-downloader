@@ -44,4 +44,4 @@ function downloadImageByURL(url, filePath) {
   // ...
 }
 
-getRepoContributors('jquery', 'jquery', printURLS)
+getRepoContributors(process.argv[2], process.argv[3], printURLS)
