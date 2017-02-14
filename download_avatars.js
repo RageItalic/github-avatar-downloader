@@ -14,19 +14,41 @@ function getRepoContributors(repoOwner, repoName, cb) {
   };
 
   request(options, function(error, response, body){
-    var data = JSON.parse(response.body);
-    data.forEach(function(profile){
+    if(process.argv[2] == null || process.argv[3] == null){
+      console.log('INVALID!! Try again with a repoOwner and a repoName');
+    }
+    else if (process.argv[2] == null && process.argv[3] == null){
+      console.log('INVALID!! Try again with a repoOwner and a repoName');
+    }
+    else{
+      var data = JSON.parse(response.body);
+      data.forEach(function(profile){
       var avatar_url = profile.avatar_url;
       var dir = "./avatars";     //for creating the filepath
-      var filePath = dir + "/" + profile.login + ".jpg";    //for ccreating filepath
+      var filePath = dir + "/" + profile.login + ".jpg";    //for creating filepath
       if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
         fs.mkdir(dir);
       }
       downloadImageByURL(avatar_url, filePath); //downloads images and stores them according to the described filepath
-    })
+    });
     cb(data);
     console.log("Download Complete.");
-  });
+  }
+
+    //var data = JSON.parse(response.body);
+    //data.forEach(function(profile){
+      //var avatar_url = profile.avatar_url;
+      //var dir = "./avatars";     //for creating the filepath
+      //var filePath = dir + "/" + profile.login + ".jpg";    //for creating filepath
+      //if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
+        //fs.mkdir(dir);
+      //}
+      //downloadImageByURL(avatar_url, filePath); //downloads images and stores them according to the described filepath
+    //})
+    //cb(data);
+    //console.log("Download Complete.");
+  //});
+});
 }
 
 function printURLS(contributors){              //callback function
@@ -44,4 +66,12 @@ function downloadImageByURL(url, filePath) {
   // ...
 }
 
-getRepoContributors(process.argv[2], process.argv[3], printURLS)     // Accepts command line arguments
+getRepoContributors(process.argv[2], process.argv[3], printURLS)
+
+//if(process.argv[2] == null && process.argv[3] == null){
+  //console.log('INVALID!! Try again with a repoOwner and a repoName');
+//}
+//else{
+  //request();
+//}
+   // Accepts command line arguments
