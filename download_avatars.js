@@ -13,7 +13,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
   };
 
-  request(options, function(error, response, body){
+  request(options, function(error, response, body){ //the following is an if else block that works according to whether or not arguments have been added to the command line
     if(process.argv[2] == null || process.argv[3] == null){
       console.log('INVALID!! Try again with a repoOwner and a repoName');
     }
@@ -23,55 +23,30 @@ function getRepoContributors(repoOwner, repoName, cb) {
     else{
       var data = JSON.parse(response.body);
       data.forEach(function(profile){
-      var avatar_url = profile.avatar_url;
-      var dir = "./avatars";     //for creating the filepath
-      var filePath = dir + "/" + profile.login + ".jpg";    //for creating filepath
-      if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
-        fs.mkdir(dir);
-      }
+        var avatar_url = profile.avatar_url;
+        var dir = "./avatars";     //for creating the filepath
+        var filePath = dir + "/" + profile.login + ".jpg";    //for creating filepath
+        if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
+          fs.mkdir(dir);
+        }
       downloadImageByURL(avatar_url, filePath); //downloads images and stores them according to the described filepath
     });
     cb(data);
     console.log("Download Complete.");
-  }
-
-    //var data = JSON.parse(response.body);
-    //data.forEach(function(profile){
-      //var avatar_url = profile.avatar_url;
-      //var dir = "./avatars";     //for creating the filepath
-      //var filePath = dir + "/" + profile.login + ".jpg";    //for creating filepath
-      //if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
-        //fs.mkdir(dir);
-      //}
-      //downloadImageByURL(avatar_url, filePath); //downloads images and stores them according to the described filepath
-    //})
-    //cb(data);
-    //console.log("Download Complete.");
-  //});
-});
+    }
+  });
 }
 
 function printURLS(contributors){              //callback function
   for(i = 0; i < contributors.length; i++){      //iterates through the objects (contributors and their info) and prints out ONLY their avatar url
     console.log(contributors[i]['avatar_url']);
-
   }
 }
 
 function downloadImageByURL(url, filePath) {
   request(url)
-
-  .pipe(fs.createWriteStream(filePath));
-
-  // ...
+  .pipe(fs.createWriteStream(filePath)); //pipes (connects) the URLS to the filepath
 }
 
 getRepoContributors(process.argv[2], process.argv[3], printURLS)
 
-//if(process.argv[2] == null && process.argv[3] == null){
-  //console.log('INVALID!! Try again with a repoOwner and a repoName');
-//}
-//else{
-  //request();
-//}
-   // Accepts command line arguments
