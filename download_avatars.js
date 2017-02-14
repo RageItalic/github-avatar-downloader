@@ -17,20 +17,20 @@ function getRepoContributors(repoOwner, repoName, cb) {
     var data = JSON.parse(response.body);
     data.forEach(function(profile){
       var avatar_url = profile.avatar_url;
-      var dir = "./avatars";
-      var filePath = dir + "/" + profile.login + ".jpg";
-      if(!fs.existsSync(dir)){ //checks to see whether or not the dir exists
+      var dir = "./avatars";     //for creating the filepath
+      var filePath = dir + "/" + profile.login + ".jpg";    //for ccreating filepath
+      if(!fs.existsSync(dir)){      //checks to see whether or not the directory exists
         fs.mkdir(dir);
       }
-      downloadImageByURL(avatar_url, filePath);
+      downloadImageByURL(avatar_url, filePath); //downloads images and stores them according to the described filepath
     })
     cb(data);
     console.log("Download Complete.");
   });
 }
 
-function printURLS(contributors){
-  for(i = 0; i < contributors.length; i++){
+function printURLS(contributors){              //callback function
+  for(i = 0; i < contributors.length; i++){      //iterates through the objects (contributors and their info) and prints out ONLY their avatar url
     console.log(contributors[i]['avatar_url']);
 
   }
@@ -44,4 +44,4 @@ function downloadImageByURL(url, filePath) {
   // ...
 }
 
-getRepoContributors(process.argv[2], process.argv[3], printURLS)
+getRepoContributors(process.argv[2], process.argv[3], printURLS)     // Accepts command line arguments
